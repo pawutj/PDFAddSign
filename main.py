@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter import filedialog
 from pathlib import Path
 import os
+from sys import exit
 currentPath = os.getcwd()
 
 window = Tk()
