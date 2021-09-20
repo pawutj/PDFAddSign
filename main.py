@@ -55,7 +55,7 @@ def convert():
         for x in pdf_filename:
             print(Path(x).stem)
             addSign(x, img_filename, Path(x).stem+'_sign.pdf',
-                    int(X.get()), int(Y.get()), int(SignScale.get()))
+                    float(X.get()), float(Y.get()), float(SignScale.get()))
 
 # Function for opening the
 # file explorer window
