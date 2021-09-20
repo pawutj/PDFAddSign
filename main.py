@@ -1,23 +1,23 @@
 # !/usr/bin/python
 # Adding a watermark to a multi-page PDF
 import PyPDF2
-from PIL import Image
+from PIL import Image as PTLImage
 from tkinter import *
 from tkinter import filedialog
-
+from pathlib import Path
 import os
 currentPath = os.getcwd()
 
 
-def addSign():
+def addSign(input_file, watermark_file, output_file):
 
-    input_file = "pdf.pdf"
-    watermark_file = "img.png"
-    output_file = "pdf-drafted.pdf"
+    # input_file = "pdf.pdf"
+    # watermark_file = "img.png"
+    # output_file = "pdf-drafted.pdf"
 
-    im1 = Image.open(watermark_file)
-    background = Image.new('RGBA', im1.size, (255, 255, 255))
-    alpha_composite = Image.alpha_composite(background, im1)
+    im1 = PTLImage.open(watermark_file)
+    background = PTLImage.new('RGBA', im1.size, (255, 255, 255))
+    alpha_composite = PTLImage.alpha_composite(background, im1)
     alpha_composite = alpha_composite.convert('RGB')
 
     alpha_composite.save('_pdf.pdf', "PDF", resolution=100.0)
@@ -35,13 +35,23 @@ def addSign():
         writer.write(out_file)
 
 
-def Convert():
-    print('Button bind working!')
+pdf_filename = []
+img_filename = ''
 
+
+def convert():
+    print(pdf_filename, 'pdf name')
+    print(img_filename, 'img name')
+    for x in pdf_filename:
+        print(Path(x).stem)
+        addSign(x, img_filename, Path(x).stem+'_sign.pdf')
 
 # Function for opening the
 # file explorer window
+
+
 def browsePDF():
+    global pdf_filename
     filename = filedialog.askopenfilename(initialdir=currentPath,
                                           title="Select a PDF",
                                           filetypes=(("PDF",
@@ -50,12 +60,14 @@ def browsePDF():
                                                       "*.*")),
                                           multiple=True
                                           )
+    pdf_filename = filename
     print(filename)
     # Change label contents
     #label_file_explorer.configure(text="File Opened: "+filename)
 
 
 def browseIMG():
+    global img_filename
     filename = filedialog.askopenfilename(initialdir=currentPath,
                                           title="Select a IMG",
                                           filetypes=(("IMG",
@@ -63,6 +75,7 @@ def browseIMG():
                                                      ("all files",
                                                       "*.*"))
                                           )
+    img_filename = filename
     print(filename)
     # Change label contents
     #label_file_explorer.configure(text="File Opened: "+filename)
