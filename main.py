@@ -47,11 +47,12 @@ def browsePDF():
                                           filetypes=(("PDF",
                                                       "*.pdf*"),
                                                      ("all files",
-                                                      "*.*"))
+                                                      "*.*")),
+                                          multiple=True
                                           )
-
+    print(filename)
     # Change label contents
-    label_file_explorer.configure(text="File Opened: "+filename)
+    #label_file_explorer.configure(text="File Opened: "+filename)
 
 
 def browseIMG():
@@ -62,9 +63,9 @@ def browseIMG():
                                                      ("all files",
                                                       "*.*"))
                                           )
-
+    print(filename)
     # Change label contents
-    label_file_explorer.configure(text="File Opened: "+filename)
+    #label_file_explorer.configure(text="File Opened: "+filename)
 
 
 # Create the root window
@@ -95,6 +96,10 @@ button_explore_2 = Button(window,
                           command=browseIMG)
 
 
+button_convert = Button(window,
+                        text="Convert",
+                        command=lambda: convert())
+
 button_exit = Button(window,
                      text="Exit",
                      command=exit)
@@ -107,7 +112,8 @@ label_file_explorer.grid(column=1, row=1)
 
 button_explore_1.grid(column=1, row=2)
 button_explore_2.grid(column=1, row=3)
-button_exit.grid(column=1, row=4)
+button_convert.grid(column=1, row=4)
+button_exit.grid(column=1, row=5)
 
 # Let the window wait for any events
 window.mainloop()
