@@ -8,8 +8,13 @@ from pathlib import Path
 import os
 currentPath = os.getcwd()
 
+window = Tk()
+X = StringVar()
+Y = StringVar()
+SignScale = StringVar()
 
-def addSign(input_file, watermark_file, output_file):
+
+def addSign(input_file, watermark_file, output_file, X, Y, SignScale):
 
     # input_file = "pdf.pdf"
     # watermark_file = "img.png"
@@ -26,8 +31,8 @@ def addSign(input_file, watermark_file, output_file):
     sign_pdf = PyPDF2.PdfFileReader('_pdf.pdf').getPage(0)
 
     in_page = in_pdf.getPage(0)
-    in_page.mergeScaledTranslatedPage(sign_pdf, 0.1,
-                                      0, 0)
+    in_page.mergeScaledTranslatedPage(sign_pdf, SignScale,
+                                      X, Y)
 
     writer = PyPDF2.PdfFileWriter()
     writer.addPage(in_pdf.getPage(0))
@@ -40,11 +45,17 @@ img_filename = ''
 
 
 def convert():
-    print(pdf_filename, 'pdf name')
-    print(img_filename, 'img name')
-    for x in pdf_filename:
-        print(Path(x).stem)
-        addSign(x, img_filename, Path(x).stem+'_sign.pdf')
+    print(X.get())
+    print(Y.get())
+    print(SignScale.get())
+    if(img_filename != ''):
+        print(pdf_filename, 'pdf name')
+        print(img_filename, 'img name')
+
+        for x in pdf_filename:
+            print(Path(x).stem)
+            addSign(x, img_filename, Path(x).stem+'_sign.pdf',
+                    int(X.get()), int(Y.get()), int(SignScale.get()))
 
 # Function for opening the
 # file explorer window
@@ -57,13 +68,13 @@ def browsePDF():
                                           filetypes=(("PDF",
                                                       "*.pdf*"),
                                                      ("all files",
-                                                      "*.*")),
+                                                     "*.*")),
                                           multiple=True
                                           )
     pdf_filename = filename
     print(filename)
     # Change label contents
-    #label_file_explorer.configure(text="File Opened: "+filename)
+    label_file_explorer.configure(text="Add PDF Complate")
 
 
 def browseIMG():
@@ -73,22 +84,21 @@ def browseIMG():
                                           filetypes=(("IMG",
                                                       "*.png*"),
                                                      ("all files",
-                                                      "*.*"))
+                                                     "*.*"))
                                           )
     img_filename = filename
     print(filename)
     # Change label contents
-    #label_file_explorer.configure(text="File Opened: "+filename)
+    label_file_explorer.configure(text="Add Sign Complate")
 
 
 # Create the root window
-window = Tk()
 
 # Set window title
 window.title('File Explorer')
 
 # Set window size
-window.geometry("500x500")
+window.geometry("500x300")
 
 # Set window background color
 window.config(background="white")
@@ -116,6 +126,14 @@ button_convert = Button(window,
 button_exit = Button(window,
                      text="Exit",
                      command=exit)
+labelX = Label(window, text="X")
+
+labelY = Label(window, text="Y")
+
+labelSignScale = Label(window, text="SignScale")
+entryX = Entry(window, textvariable=X)
+entryY = Entry(window, textvariable=Y)
+entrySignScale = Entry(window, textvariable=SignScale)
 
 # Grid method is chosen for placing
 # the widgets at respective positions
@@ -126,7 +144,13 @@ label_file_explorer.grid(column=1, row=1)
 button_explore_1.grid(column=1, row=2)
 button_explore_2.grid(column=1, row=3)
 button_convert.grid(column=1, row=4)
-button_exit.grid(column=1, row=5)
+labelX.grid(column=0, row=5)
+labelY.grid(column=0, row=6)
+labelSignScale.grid(column=0, row=7)
+entryX.grid(column=1, row=5)
+entryY.grid(column=1, row=6)
+entrySignScale.grid(column=1, row=7)
+button_exit.grid(column=1, row=8)
 
 # Let the window wait for any events
 window.mainloop()
