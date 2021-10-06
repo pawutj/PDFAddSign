@@ -29,14 +29,18 @@ def addSign(input_file, watermark_file, output_file, X, Y, SignScale):
     alpha_composite.save('_pdf.pdf', "PDF", resolution=100.0)
 
     in_pdf = PyPDF2.PdfFileReader(input_file)
+    pageNumber = in_pdf.getNumPages()
     sign_pdf = PyPDF2.PdfFileReader('_pdf.pdf').getPage(0)
 
-    in_page = in_pdf.getPage(0)
+    in_page = in_pdf.getPage(pageNumber - 1)
     in_page.mergeScaledTranslatedPage(sign_pdf, SignScale,
                                       X, Y)
 
     writer = PyPDF2.PdfFileWriter()
-    writer.addPage(in_pdf.getPage(0))
+    for i in range(pageNumber - 1):
+        tempPage = in_pdf.getPage(i)
+        writer.addPage(tempPage)
+    writer.addPage(in_pdf.getPage(pageNumber - 1))
     with open(output_file, 'wb') as out_file:
         writer.write(out_file)
 
